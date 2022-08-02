@@ -1,7 +1,7 @@
 import {sequelize} from "../db.js";
 import { DataTypes } from "sequelize";
 
-const User = sequelize.define("user", {
+export const User = sequelize.define("user", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -12,14 +12,14 @@ const User = sequelize.define("user", {
   role: { type: DataTypes.STRING, defaultValue: "USER" },
 });
 
-const Basket = sequelize.define("basket", {
+export const Basket = sequelize.define("basket", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4,
   },
 });
-const BasketDevice = sequelize.define("basket_device", {
+export const BasketDevice = sequelize.define("basket_device", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -27,7 +27,7 @@ const BasketDevice = sequelize.define("basket_device", {
   },
 });
 
-const Device = sequelize.define("device", {
+export const Device = sequelize.define("device", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -39,7 +39,7 @@ const Device = sequelize.define("device", {
   image: { type: DataTypes.STRING, allowNull: false },
 });
 
-const Type = sequelize.define("type", {
+export const Type = sequelize.define("type", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -48,7 +48,7 @@ const Type = sequelize.define("type", {
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
 });
 
-const Brand = sequelize.define("brand", {
+export const Brand = sequelize.define("brand", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -57,7 +57,7 @@ const Brand = sequelize.define("brand", {
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
 });
 
-const Rating = sequelize.define("rating", {
+export const Rating = sequelize.define("rating", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -66,7 +66,7 @@ const Rating = sequelize.define("rating", {
   rate: { type: DataTypes.INTEGER, allowNull: false },
 });
 
-const DeviceInfo = sequelize.define("device_info", {
+export const DeviceInfo = sequelize.define("device_info", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -76,7 +76,7 @@ const DeviceInfo = sequelize.define("device_info", {
   description: { type: DataTypes.STRING, allowNull: false },
 });
 
-const TypeBrand = sequelize.define("type_brand", {
+export const TypeBrand = sequelize.define("type_brand", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -102,7 +102,7 @@ Device.belongsTo(Brand);
 Device.hasMany(Rating);
 Rating.belongsTo(Device);
 
-Device.hasMany(DeviceInfo);
+Device.hasMany(DeviceInfo, {as: "info"});
 DeviceInfo.belongsTo(Device);
 
 Device.hasMany(BasketDevice);
@@ -110,8 +110,6 @@ BasketDevice.belongsTo(Device);
 
 Type.belongsToMany(Brand, { through: TypeBrand });
 Brand.belongsToMany(Type, { through: TypeBrand });
-
-await sequelize.sync()
 
 export default {
   User,
